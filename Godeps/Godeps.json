@@ -1,0 +1,23 @@
+{
+	"ImportPath": "github.com/hasokon/linebot",
+	"GoVersion": "go1.8",
+	"GodepVersion": "v79",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/line/line-bot-sdk-go/linebot",
+			"Comment": "1.0.0-52-gb52b3bb",
+			"Rev": "b52b3bb5f30e629d59bf099e46f0cef2714c643f"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "5602c733f70afc6dcec6766be0d5034d4c4f14de"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context/ctxhttp",
+			"Rev": "5602c733f70afc6dcec6766be0d5034d4c4f14de"
+		}
+	]
+}
