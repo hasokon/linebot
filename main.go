@@ -57,7 +57,7 @@ func replyMahjanYaku() string {
 
 	return yaku
 }
-
+/*
 func reply(bot *linebot.Client, text string, event *linebot.Event) {
 	message := ""
 	r := regexp.MustCompile(`ンゴ$`)
@@ -75,6 +75,24 @@ func reply(bot *linebot.Client, text string, event *linebot.Event) {
 		return
 	}
 	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message)).Do(); err != nil {
+		log.Print(err)
+	}
+}
+*/
+
+func reply(bot *linebot.Client, text string, event *linebot.Event) {
+	parentAction := &linebot.MessageTemplateAction{
+		Label : "Parent",
+		Text : "Parent",
+	}
+	childAction := &linebot.MessageTemplateAction{
+		Label : "Child",
+		Text : "Child",
+	}
+
+	template := linebot.NewButtonsTemplate("", "", "Who are you?", parentAction, childAction)
+
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("test",template)).Do(); err != nil {
 		log.Print(err)
 	}
 }
