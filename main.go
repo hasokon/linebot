@@ -151,7 +151,7 @@ func main() {
 							case "tsumo" : ms.tsumo = true
 							case "ron" : ms.tsumo = false
 						}
-						yaku := linebot.NewTextMessage(ms.String)
+						yaku := linebot.NewTextMessage(ms.String())
 						score := linebot.NewTextMessage(ms.getMahjanScore())
 						if _, err := bot.ReplyMessage(event.ReplyToken, yaku, score).Do(); err != nil {
 							log.Print(err)
