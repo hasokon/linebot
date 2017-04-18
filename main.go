@@ -52,7 +52,6 @@ func replyMahjanYaku() string {
 
 	yaku := ""
 	for _, v := range m.Yakulist {
-		//yaku = yaku + v.String() + `%0D%0A`
 		yaku = yaku + v.String() + "\n"
 	}
 
@@ -63,7 +62,6 @@ func reply(bot *linebot.Client, text string, event *linebot.Event) {
 	message := ""
 	r := regexp.MustCompile(`ンゴ$`)
 	mahjan := regexp.MustCompile(`^m[pc][tr][0-9]*,[0-9]`)
-	//mahjanYaku := regexp.MustCompile(`^麻雀の役教えて$`)
 	switch {
 	case text == "334":
 		message = "なんでや！阪神関係ないやろ！"
@@ -83,8 +81,8 @@ func reply(bot *linebot.Client, text string, event *linebot.Event) {
 
 func main() {
 	bot, err := linebot.New(
-		"5479f9c765bb2de208e7a08bf673e81d",
-		"YrQMT3k3FsBm0jx0WT6R+TwsnRdJS4aKsI8F8qW9gYn+YaktMglbsKaxwUaxjP7XvimJJ8elZLLlvvdfzVffzeHYu9/ob61NCSDfEHGB2WLidineLSuSi22+qPy6SJYPWbOKYxNG07uF78sIg7UPYwdB04t89/1O/w1cDnyilFU=",
+		os.Getenv("CHANNEL_SECRET"),
+		os.Getenv("CHANNEL_TOKEN"),
 	)
 	if err != nil {
 		log.Fatal(err)
