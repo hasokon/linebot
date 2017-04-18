@@ -71,7 +71,7 @@ func reply(bot *linebot.Client, text string, event *linebot.Event) {
 	case mahjan.MatchString(text):
 		message = replyMahjanScore(text)
 	case text == "麻雀の役を教えて":
-		message = replyMahjanYaku(text)
+		message = replyMahjanYaku()
 	default:
 		return
 	}
