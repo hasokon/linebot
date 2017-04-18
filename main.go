@@ -81,12 +81,8 @@ func reply(bot *linebot.Client, text string, event *linebot.Event) {
 */
 
 func reply(bot *linebot.Client, text string, event *linebot.Event) {
-	parentAction := &linebot.MessageTemplateAction{
-		Label : "Parent",
-	}
-	childAction := &linebot.MessageTemplateAction{
-		Label : "Child",
-	}
+	parentAction := linebot.NewPostbackTemplateAction("Parent", "parent data", "")
+	childAction := linebot.NewPostbackTemplateAction("Child", "child data", "")
 
 	template := linebot.NewButtonsTemplate("", "", "Who are you?", parentAction, childAction)
 
@@ -120,10 +116,12 @@ func main() {
 				switch message := event.Message.(type) {
 				case *linebot.TextMessage:
 					reply(bot, message.Text, event)
-				case *linebot.TemplateMessage:
-					if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.AltText)).Do(); err != nil {
-						log.Print(err)
-					}
+			}
+
+			if event.Type == linebot.EventTypePostback {
+				postback := event.Postback
+				if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(postback.Data)).Do(); err != nil {
+					log.Print(err)
 				}
 			}
 		}
