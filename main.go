@@ -100,7 +100,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ms := MahjanScore{}
+	ms := MahjanScore{hu : 40, han : 3}
 
 	// Setup HTTP Server for receiving requests from LINE platform
 	http.HandleFunc("/callback", func(w http.ResponseWriter, req *http.Request) {
