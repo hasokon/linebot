@@ -18,7 +18,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-//	"regexp"
+	"regexp"
 	"strings"
 	"strconv"
 
@@ -57,7 +57,7 @@ func replyMahjanYaku() string {
 
 	return yaku
 }
-/*
+
 func reply(bot *linebot.Client, text string, event *linebot.Event) {
 	message := ""
 	r := regexp.MustCompile(`ンゴ$`)
@@ -71,6 +71,8 @@ func reply(bot *linebot.Client, text string, event *linebot.Event) {
 		message = replyMahjanScore(text)
 	case text == "麻雀の役を教えて":
 		message = replyMahjanYaku()
+	case text == "score":
+		replyScoreParentOrChild(bot,event)
 	default:
 		return
 	}
@@ -78,15 +80,14 @@ func reply(bot *linebot.Client, text string, event *linebot.Event) {
 		log.Print(err)
 	}
 }
-*/
 
-func reply(bot *linebot.Client, text string, event *linebot.Event) {
-	parentAction := linebot.NewPostbackTemplateAction("Parent", "parent data", "")
-	childAction := linebot.NewPostbackTemplateAction("Child", "child data", "")
+func replyParentOrChild(bot *linebot.Client, event *linebot.Event) {
+	parentAction := linebot.NewPostbackTemplateAction("Parent", "parent", "")
+	childAction := linebot.NewPostbackTemplateAction("Child", "child", "")
 
 	template := linebot.NewButtonsTemplate("", "", "Who are you?", parentAction, childAction)
 
-	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("test",template)).Do(); err != nil {
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("parent_or_child",template)).Do(); err != nil {
 		log.Print(err)
 	}
 }
