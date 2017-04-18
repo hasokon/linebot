@@ -116,6 +116,7 @@ func main() {
 				switch message := event.Message.(type) {
 				case *linebot.TextMessage:
 					reply(bot, message.Text, event)
+				}
 			}
 
 			if event.Type == linebot.EventTypePostback {
