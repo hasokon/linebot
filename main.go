@@ -21,6 +21,7 @@ import (
 	"regexp"
 	"strings"
 //	"strconv"
+	"fmt"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/hasokon/mahjan"
@@ -36,6 +37,20 @@ type MahjanScore struct {
 func (this MahjanScore) getMahjanScore() string {
 	m := mahjan.New()
 	return m.Score(this.hu, this.han, this.person, this.tsumo)
+}
+
+func (this MahjanScore) String() string {
+	p := "Parent"
+	if this.person == mahjan.Child {
+		p := "Child"
+	}
+
+	t := "Ron"
+	if this.tsumo {
+		t := "Tsumo"
+	}
+
+	return fmt.Sprintf("%s %s %dhu%dhan", p, t, this.hu, this.han)
 }
 
 func replyMahjanYaku() string {
@@ -136,7 +151,9 @@ func main() {
 							case "tsumo" : ms.tsumo = true
 							case "ron" : ms.tsumo = false
 						}
-						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(ms.getMahjanScore())).Do(); err != nil {
+						yaku := linebot.NewTextMessage(ms.String)
+						score := linebot.NewTextMessage(ms.getMahjanScore())
+						if _, err := bot.ReplyMessage(event.ReplyToken, yaku, score).Do(); err != nil {
 							log.Print(err)
 						}
 				}
