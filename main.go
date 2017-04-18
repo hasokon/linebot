@@ -119,7 +119,7 @@ func main() {
 							case "parent": ms.person = mahjan.Parent
 							case "child" : ms.person = mahjan.Child
 						}
-						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(""+int(ms.person))).Do(); err != nil {
+						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(datas[1])).Do(); err != nil {
 							log.Print(err)
 						}
 				}
