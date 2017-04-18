@@ -75,7 +75,7 @@ func replyParentOrChild(bot *linebot.Client, event *linebot.Event) {
 
 	template := linebot.NewButtonsTemplate("", "", "Who are you?", parentAction, childAction)
 
-	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("",template)).Do(); err != nil {
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("parent_or_child",template)).Do(); err != nil {
 		log.Print(err)
 	}
 }
@@ -86,7 +86,7 @@ func replyTsumoOrRon(bot *linebot.Client, event *linebot.Event) {
 
 	template := linebot.NewButtonsTemplate("", "", "Which tsumo or ron?", tsumoAction, ronAction)
 
-	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("",template)).Do(); err != nil {
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("tsumo_or_ron",template)).Do(); err != nil {
 		log.Print(err)
 	}
 }
