@@ -41,8 +41,8 @@ func replyMahjanScore(text string) string {
 
 	text = text[3:]
 	nums := strings.Split(text, ",")
-	hu := uint(strconv.Atoi(nums[0]))
-	han := uint(strconv.Atoi(nums[1]))
+	hu,_ := uint(strconv.Atoi(nums[0]))
+	han,_ := uint(strconv.Atoi(nums[1]))
 
 	return m.Score(hu, han, person, tsumo)
 }
