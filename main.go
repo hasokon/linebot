@@ -42,12 +42,12 @@ func (this MahjanScore) getMahjanScore() string {
 func (this MahjanScore) String() string {
 	p := "Parent"
 	if this.person == mahjan.Child {
-		p := "Child"
+		p = "Child"
 	}
 
 	t := "Ron"
 	if this.tsumo {
-		t := "Tsumo"
+		t = "Tsumo"
 	}
 
 	return fmt.Sprintf("%s %s %dhu%dhan", p, t, this.hu, this.han)
