@@ -22,6 +22,19 @@ import (
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
+func reply(bot *linebot.Client, text string, event *linebot.Event) {
+	message := ""
+	switch text {
+	case "334":
+		message = "なんでや！阪神関係ないやろ！"
+	default:
+		message = "はえ〜"
+	}
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message)).Do(); err != nil {
+		log.Print(err)
+	}
+}
+
 func main() {
 	bot, err := linebot.New(
 		"5479f9c765bb2de208e7a08bf673e81d",
@@ -46,10 +59,7 @@ func main() {
 			if event.Type == linebot.EventTypeMessage {
 				switch message := event.Message.(type) {
 				case *linebot.TextMessage:
-					replyMessage := "334" + message.Text
-					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(replyMessage)).Do(); err != nil {
-						log.Print(err)
-					}
+					reply(bot, message.Text, event)
 				}
 			}
 		}
