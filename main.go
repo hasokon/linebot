@@ -20,7 +20,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
-	"strconv"
+//	"strconv"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/hasokon/mahjan"
@@ -119,7 +119,7 @@ func main() {
 							case "parent": ms.person = mahjan.Parent
 							case "child" : ms.person = mahjan.Child
 						}
-						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(""+ms.person)).Do(); err != nil {
+						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(""+int(ms.person))).Do(); err != nil {
 							log.Print(err)
 						}
 				}
