@@ -62,7 +62,7 @@ func reply(bot *linebot.Client, text string, event *linebot.Event) {
 	message := ""
 	r := regexp.MustCompile(`ンゴ$`)
 	mahjan := regexp.MustCompile(`^m[pc][tr][0-9]*,[0-9]`)
-	mahjanYaku := regexp.MustCompile(`^麻雀の役教えて$`)
+	//mahjanYaku := regexp.MustCompile(`^麻雀の役教えて$`)
 	switch {
 	case text == "334":
 		message = "なんでや！阪神関係ないやろ！"
@@ -70,7 +70,7 @@ func reply(bot *linebot.Client, text string, event *linebot.Event) {
 		message = "はえ〜"
 	case mahjan.MatchString(text):
 		message = replyMahjanScore(text)
-	case mahjanYaku.MatchString(text):
+	case text == "麻雀の役を教えて":
 		message = replyMahjanScore(text)
 	default:
 		return
