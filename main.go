@@ -47,16 +47,30 @@ func replyMahjanScore(text string) string {
 	return m.Score(uint(hu), uint(han), person, tsumo)
 }
 
+func replyMahjanYaku() string {
+	m := mahjan.New()
+
+	yaku := ""
+	for _, v := range m.Yakulist {
+		yaku = yaku + v.String() + "%0D%0A"
+	}
+
+	return yaku
+}
+
 func reply(bot *linebot.Client, text string, event *linebot.Event) {
 	message := ""
 	r := regexp.MustCompile(`ンゴ$`)
 	mahjan := regexp.MustCompile(`^m[pc][tr][0-9]*,[0-9]`)
+	mahjanYaku := regexp.MustCompile(`^麻雀の役教えて$`)
 	switch {
 	case text == "334":
 		message = "なんでや！阪神関係ないやろ！"
 	case r.MatchString(text):
 		message = "はえ〜"
 	case mahjan.MatchString(text):
+		message = replyMahjanScore(text)
+	case mahjanYaku.MatchString(text):
 		message = replyMahjanScore(text)
 	default:
 		return
