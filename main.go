@@ -41,10 +41,10 @@ func replyMahjanScore(text string) string {
 
 	text = text[3:]
 	nums := strings.Split(text, ",")
-	hu,_ := uint(strconv.Atoi(nums[0]))
-	han,_ := uint(strconv.Atoi(nums[1]))
+	hu,_ := strconv.Atoi(nums[0])
+	han,_ := strconv.Atoi(nums[1])
 
-	return m.Score(hu, han, person, tsumo)
+	return m.Score(uint(hu), uint(han), person, tsumo)
 }
 
 func reply(bot *linebot.Client, text string, event *linebot.Event) {
