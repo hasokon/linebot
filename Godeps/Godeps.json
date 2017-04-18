@@ -7,6 +7,10 @@
 	],
 	"Deps": [
 		{
+			"ImportPath": "github.com/hasokon/mahjan",
+			"Rev": "f2d86bd9a99d6977a5c61e5d98bc143961078bef"
+		},
+		{
 			"ImportPath": "github.com/line/line-bot-sdk-go/linebot",
 			"Comment": "1.0.0-52-gb52b3bb",
 			"Rev": "b52b3bb5f30e629d59bf099e46f0cef2714c643f"

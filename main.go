@@ -19,18 +19,45 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"strings"
+	"strconv"
 
 	"github.com/line/line-bot-sdk-go/linebot"
+	"github.com/hasokon/mahjan"
 )
+
+func replyMahjanScore(text string) string {
+	m := mahjan.New()
+
+	person := mahjan.Parent
+	if text[1] == 'c' {
+		person = mahjan.Child
+	}
+
+	tsumo := true
+	if text[2] == 'r' {
+		tsumo = false
+	}
+
+	text = text[3:]
+	nums := strings.Split(text, ",")
+	hu := uint(strconv.Atoi(nums[0]))
+	han := uint(strconv.Atoi(nums[1]))
+
+	return m.Score(hu, han, person, tsumo)
+}
 
 func reply(bot *linebot.Client, text string, event *linebot.Event) {
 	message := ""
 	r := regexp.MustCompile(`ンゴ$`)
+	mahjan := regexp.MustCompile(`^m[pc][tr][0-9]*,[0-9]`)
 	switch {
 	case text == "334":
 		message = "なんでや！阪神関係ないやろ！"
 	case r.MatchString(text):
 		message = "はえ〜"
+	case mahjan.MatchString(text):
+		message = replyMahjanScore(text)
 	default:
 		return
 	}
