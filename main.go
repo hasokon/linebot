@@ -121,7 +121,7 @@ func main() {
 				case *linebot.TextMessage:
 					reply(bot, message.Text, event)
 				case *linebot.TemplateMessage:
-					if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Template.Label)).Do(); err != nil {
+					if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.AltText)).Do(); err != nil {
 						log.Print(err)
 					}
 				}
