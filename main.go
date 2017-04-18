@@ -52,7 +52,7 @@ func replyMahjanYaku() string {
 
 	yaku := ""
 	for _, v := range m.Yakulist {
-		yaku = yaku + v.String() + "%0D%0A"
+		yaku = yaku + v.String() + `%0D%0A`
 	}
 
 	return yaku
