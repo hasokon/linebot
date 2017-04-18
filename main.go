@@ -75,7 +75,18 @@ func replyParentOrChild(bot *linebot.Client, event *linebot.Event) {
 
 	template := linebot.NewButtonsTemplate("", "", "Who are you?", parentAction, childAction)
 
-	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("parent_or_child",template)).Do(); err != nil {
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("",template)).Do(); err != nil {
+		log.Print(err)
+	}
+}
+
+func replyTsumoOrRon(bot *linebot.Client, event *linebot.Event) {
+	tsumoAction := linebot.NewPostbackTemplateAction("Tsumo", "tsumo_or_ron,tsumo", "")
+	ronAction := linebot.NewPostbackTemplateAction("Ron", "tsumo_or_ron,ron", "")
+
+	template := linebot.NewButtonsTemplate("", "", "Which tsumo or ron?", tsumoAction, ronAction)
+
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("",template)).Do(); err != nil {
 		log.Print(err)
 	}
 }
@@ -119,7 +130,13 @@ func main() {
 							case "parent": ms.person = mahjan.Parent
 							case "child" : ms.person = mahjan.Child
 						}
-						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(datas[1])).Do(); err != nil {
+						replyTsumoOrRon(bot, event)
+					case "tsumo_or_ron":
+						switch datas[1] {
+							case "tsumo" : ms.tsumo = true
+							case "ron" : ms.tsumo = false
+						}
+						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(ms.getMahjanScore())).Do(); err != nil {
 							log.Print(err)
 						}
 				}
