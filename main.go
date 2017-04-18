@@ -18,17 +18,21 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
 func reply(bot *linebot.Client, text string, event *linebot.Event) {
 	message := ""
-	switch text {
-	case "334":
+	r := regexp.MustCompile(`ンゴ$`)
+	switch {
+	case text == "334":
 		message = "なんでや！阪神関係ないやろ！"
-	default:
+	case r.MatchString(text):
 		message = "はえ〜"
+	default:
+		return
 	}
 	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message)).Do(); err != nil {
 		log.Print(err)
