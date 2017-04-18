@@ -26,25 +26,16 @@ import (
 	"github.com/hasokon/mahjan"
 )
 
-func replyMahjanScore(text string) string {
+type MahjanScore struct {
+	person mahjan.Person
+	tsumo bool
+	hu uint
+	han uint
+}
+
+func (this MahjanScore) getMahjanScore() string {
 	m := mahjan.New()
-
-	person := mahjan.Parent
-	if text[1] == 'c' {
-		person = mahjan.Child
-	}
-
-	tsumo := true
-	if text[2] == 'r' {
-		tsumo = false
-	}
-
-	text = text[3:]
-	nums := strings.Split(text, ",")
-	hu,_ := strconv.Atoi(nums[0])
-	han,_ := strconv.Atoi(nums[1])
-
-	return m.Score(uint(hu), uint(han), person, tsumo)
+	return m.Score(this.hu, this.han, this.person, this.tsumo)
 }
 
 func replyMahjanYaku() string {
@@ -61,14 +52,11 @@ func replyMahjanYaku() string {
 func reply(bot *linebot.Client, text string, event *linebot.Event) {
 	message := ""
 	r := regexp.MustCompile(`ンゴ$`)
-	mahjan := regexp.MustCompile(`^m[pc][tr][0-9]*,[0-9]`)
 	switch {
 	case text == "334":
 		message = "なんでや！阪神関係ないやろ！"
 	case r.MatchString(text):
 		message = "はえ〜"
-	case mahjan.MatchString(text):
-		message = replyMahjanScore(text)
 	case text == "麻雀の役を教えて":
 		message = replyMahjanYaku()
 	case text == "score":
@@ -82,8 +70,8 @@ func reply(bot *linebot.Client, text string, event *linebot.Event) {
 }
 
 func replyParentOrChild(bot *linebot.Client, event *linebot.Event) {
-	parentAction := linebot.NewPostbackTemplateAction("Parent", "parent", "")
-	childAction := linebot.NewPostbackTemplateAction("Child", "child", "")
+	parentAction := linebot.NewPostbackTemplateAction("Parent", "parent_or_child,parent", "")
+	childAction := linebot.NewPostbackTemplateAction("Child", "parent_or_child,child", "")
 
 	template := linebot.NewButtonsTemplate("", "", "Who are you?", parentAction, childAction)
 
@@ -100,6 +88,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	ms := MahjanScore{}
 
 	// Setup HTTP Server for receiving requests from LINE platform
 	http.HandleFunc("/callback", func(w http.ResponseWriter, req *http.Request) {
@@ -122,8 +112,16 @@ func main() {
 
 			if event.Type == linebot.EventTypePostback {
 				postback := event.Postback
-				if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(postback.Data)).Do(); err != nil {
-					log.Print(err)
+				datas := strings.Split(postback.Data,",")
+				switch datas[0] {
+					case "parent_or_child":
+						switch datas[1] {
+							case "parent": ms.person = mahjan.Parent
+							case "child" : ms.person = mahjan.Child
+						}
+						if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(""+ms.person)).Do(); err != nil {
+							log.Print(err)
+						}
 				}
 			}
 		}
