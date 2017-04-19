@@ -20,7 +20,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
-//	"strconv"
+	"strconv"
 	"fmt"
 
 	"github.com/line/line-bot-sdk-go/linebot"
