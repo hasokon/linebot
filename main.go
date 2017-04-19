@@ -40,17 +40,17 @@ func (this MahjanScore) getMahjanScore() string {
 }
 
 func (this MahjanScore) String() string {
-	p := "Parent"
+	p := "親"
 	if this.person == mahjan.Child {
-		p = "Child"
+		p = "子"
 	}
 
-	t := "Ron"
+	t := "ロン"
 	if this.tsumo {
-		t = "Tsumo"
+		t = "ツモ"
 	}
 
-	return fmt.Sprintf("%s %s %dhu%dhan", p, t, this.hu, this.han)
+	return fmt.Sprintf("%s %s %d符%d翻", p, t, this.hu, this.han)
 }
 
 func replyMahjanYaku() string {
@@ -74,7 +74,7 @@ func reply(bot *linebot.Client, text string, event *linebot.Event) {
 		message = "はえ〜"
 	case text == "麻雀の役を教えて":
 		message = replyMahjanYaku()
-	case text == "score":
+	case text == "麻雀の点数計算して":
 		replyParentOrChild(bot,event)
 	default:
 		return
@@ -85,23 +85,23 @@ func reply(bot *linebot.Client, text string, event *linebot.Event) {
 }
 
 func replyParentOrChild(bot *linebot.Client, event *linebot.Event) {
-	parentAction := linebot.NewPostbackTemplateAction("Parent", "parent_or_child,parent", "")
-	childAction := linebot.NewPostbackTemplateAction("Child", "parent_or_child,child", "")
+	parentAction := linebot.NewPostbackTemplateAction("親", "parent_or_child,parent", "")
+	childAction := linebot.NewPostbackTemplateAction("子", "parent_or_child,child", "")
 
-	template := linebot.NewButtonsTemplate("", "", "Who are you?", parentAction, childAction)
+	template := linebot.NewButtonsTemplate("", "", "親 or 子", parentAction, childAction)
 
-	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("parent_or_child",template)).Do(); err != nil {
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("親 or 子",template)).Do(); err != nil {
 		log.Print(err)
 	}
 }
 
 func replyTsumoOrRon(bot *linebot.Client, event *linebot.Event) {
-	tsumoAction := linebot.NewPostbackTemplateAction("Tsumo", "tsumo_or_ron,tsumo", "")
-	ronAction := linebot.NewPostbackTemplateAction("Ron", "tsumo_or_ron,ron", "")
+	tsumoAction := linebot.NewPostbackTemplateAction("ツモ", "tsumo_or_ron,tsumo", "")
+	ronAction := linebot.NewPostbackTemplateAction("ロン", "tsumo_or_ron,ron", "")
 
-	template := linebot.NewButtonsTemplate("", "", "Which tsumo or ron?", tsumoAction, ronAction)
+	template := linebot.NewButtonsTemplate("", "", "ツモ or ロン", tsumoAction, ronAction)
 
-	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("tsumo_or_ron",template)).Do(); err != nil {
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("ツモ or ロン",template)).Do(); err != nil {
 		log.Print(err)
 	}
 }
@@ -112,9 +112,9 @@ func replyHu(bot *linebot.Client, event *linebot.Event) {
 	action30 := linebot.NewPostbackTemplateAction("30", "hu,30", "")
 	action40 := linebot.NewPostbackTemplateAction("40", "hu,40", "")
 
-	template := linebot.NewButtonsTemplate("", "", "Hu?", action20, action25, action30, action40)
+	template := linebot.NewButtonsTemplate("", "", "何符？", action20, action25, action30, action40)
 
-	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("Hu?",template)).Do(); err != nil {
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("何符？",template)).Do(); err != nil {
 		log.Print(err)
 	}
 }
@@ -125,9 +125,9 @@ func replyHan(bot *linebot.Client, event *linebot.Event) {
 	action3 := linebot.NewPostbackTemplateAction("3", "han,3", "")
 	action4 := linebot.NewPostbackTemplateAction("4", "han,4", "")
 
-	template := linebot.NewButtonsTemplate("", "", "Han?", action1, action2, action3, action4)
+	template := linebot.NewButtonsTemplate("", "", "何翻？", action1, action2, action3, action4)
 
-	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("Han?",template)).Do(); err != nil {
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("何翻？",template)).Do(); err != nil {
 		log.Print(err)
 	}
 }
