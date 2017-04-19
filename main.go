@@ -106,6 +106,32 @@ func replyTsumoOrRon(bot *linebot.Client, event *linebot.Event) {
 	}
 }
 
+func replyHu(bot *linebot.Client, event *linebot.Event) {
+	actioin20 := linebot.NewPostbackTemplateAction("20", "hu,20", "")
+	actioin25 := linebot.NewPostbackTemplateAction("25", "hu,25", "")
+	actioin30 := linebot.NewPostbackTemplateAction("30", "hu,30", "")
+	actioin40 := linebot.NewPostbackTemplateAction("40", "hu,40", "")
+
+	template := linebot.NewButtonsTemplate("", "", "Hu?", action20, action25, action30, action40)
+
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("Hu?",template)).Do(); err != nil {
+		log.Print(err)
+	}
+}
+
+func replyHan(bot *linebot.Client, event *linebot.Event) {
+	actioin1 := linebot.NewPostbackTemplateAction("1", "han,1", "")
+	actioin2 := linebot.NewPostbackTemplateAction("2", "han,2", "")
+	actioin3 := linebot.NewPostbackTemplateAction("3", "han,3", "")
+	actioin4 := linebot.NewPostbackTemplateAction("4", "han,4", "")
+
+	template := linebot.NewButtonsTemplate("", "", "Han?", action1, action2, action3, action4)
+
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("Han?",template)).Do(); err != nil {
+		log.Print(err)
+	}
+}
+
 func main() {
 	bot, err := linebot.New(
 		os.Getenv("CHANNEL_SECRET"),
@@ -151,6 +177,14 @@ func main() {
 							case "tsumo" : ms.tsumo = true
 							case "ron" : ms.tsumo = false
 						}
+						replyHu(bot,event)
+					case "hu":
+						hu,_ := strconv.Atoi(datas[1])
+						ms.Hu = uint(hu)
+						replyHan(bot,event)
+					case "han":
+						han,_ := strconv.Atoi(datas[1])
+						ms.Han = uint(han)
 						yaku := linebot.NewTextMessage(ms.String())
 						score := linebot.NewTextMessage(ms.getMahjanScore())
 						if _, err := bot.ReplyMessage(event.ReplyToken, yaku, score).Do(); err != nil {
