@@ -6,7 +6,7 @@
 package main
 
 import (
-	"os"
+	"io"
 
 	// [START imports]
 	"golang.org/x/oauth2/google"
