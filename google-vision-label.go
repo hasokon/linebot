@@ -6,6 +6,9 @@
 package main
 
 import (
+	"bytes"
+	"io/ioutil"
+
 	// [START imports]
 	"cloud.google.com/go/vision"
 	"golang.org/x/net/context"
@@ -13,7 +16,7 @@ import (
 )
 
 // findLabels gets labels from the Vision API for an image at the given file path.
-func FindLabels(image []byte) ([]string, error) {
+func FindLabels(b []byte) ([]string, error) {
 	// [START init]
 	ctx := context.Background()
 
@@ -26,7 +29,18 @@ func FindLabels(image []byte) ([]string, error) {
 
 	// [START request]
 	// Perform the request
-	usableImage := &vision.Image{image, "", nil, nil}
+	reader, err := bytes.NewReader(b)
+	if err != nil {
+		return nil, err
+	}
+
+	readcloser := ioutil.NopCloser(reader)
+
+	image, err := NewImageFromReader(readcloser)
+	if err != nil {
+		return nil, err
+	}
+
 	annotations, err := client.DetectLabels(ctx, usableImage, 10)
 	if err != nil {
 		return nil, err
