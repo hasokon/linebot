@@ -26,7 +26,7 @@ func FindLabels(image []byte) ([]string, error) {
 
 	// [START request]
 	// Perform the request
-	usableImage := &vision.Image{content : image}
+	usableImage := &vision.Image{image, "", nil, nil}
 	annotations, err := client.DetectLabels(ctx, usableImage, 10)
 	if err != nil {
 		return nil, err
