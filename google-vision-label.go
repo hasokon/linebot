@@ -6,22 +6,30 @@
 package main
 
 import (
-	"bytes"
-	"io/ioutil"
+	"os"
 
 	// [START imports]
+	"golang.org/x/oauth2/google"
+	"google.golang.org/api/option"
 	"cloud.google.com/go/vision"
 	"golang.org/x/net/context"
 	// [END imports]
 )
 
 // findLabels gets labels from the Vision API for an image at the given file path.
-func FindLabels(b []byte) ([]string, error) {
+func FindLabels(c io.ReadCloser) ([]string, error) {
 	// [START init]
+	json := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
 	ctx := context.Background()
+	jwtConfig, err := google.JWTConfigFromJSON([]byte(json), vision.Scope)
+	if err != nil {
+		return nil, err
+	}
+
+	ts := jwtConfig.TokenSource(ctx)
 
 	// Create the client.
-	client, err := vision.NewClient(ctx)
+	client, err := vision.NewClient(ctx, option.WithTokenSource(ts))
 	if err != nil {
 		return nil, err
 	}
@@ -29,15 +37,7 @@ func FindLabels(b []byte) ([]string, error) {
 
 	// [START request]
 	// Perform the request
-	reader := bytes.NewReader(b)
-	readcloser := ioutil.NopCloser(reader)
-
-	image, err := vision.NewImageFromReader(readcloser)
-	if err != nil {
-		return nil, err
-	}
-
-	annotations, err := client.DetectLabels(ctx, image, 10)
+	annotations, err := client.DetectLabels(ctx, c, 10)
 	if err != nil {
 		return nil, err
 	}

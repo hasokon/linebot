@@ -133,7 +133,24 @@ func replyHan(bot *linebot.Client, event *linebot.Event) {
 }
 
 func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
-	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(id)).Do(); err != nil {
+	content, err := bot.GetMessageContent(id).Do()
+	if err != nil {
+		log.Print(err)
+	}
+	defer content.Content.Close()
+
+	labels, err := FindLabels(content.Content)
+	if err != nil {
+		log.Print(err)
+		return
+	}
+
+	messages := make([]*TextMessage,0)
+	for _, v := range labels {
+		messages = append(messages, linebot.NewTextMessage(v))
+	}
+
+	if _, err := bot.ReplyMessage(event.ReplyToken, messages).Do(); err != nil {
 		log.Print(err)
 	}
 }
