@@ -132,6 +132,12 @@ func replyHan(bot *linebot.Client, event *linebot.Event) {
 	}
 }
 
+func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(id)).Do(); err != nil {
+		log.Print(err)
+	}
+}
+
 func main() {
 	bot, err := linebot.New(
 		os.Getenv("CHANNEL_SECRET"),
@@ -159,6 +165,8 @@ func main() {
 				switch message := event.Message.(type) {
 				case *linebot.TextMessage:
 					reply(bot, message.Text, event)
+				case *linebot.ImageMessage:
+					replyFromImage(bot, message.ID, event)
 				}
 			}
 
