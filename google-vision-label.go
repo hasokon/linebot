@@ -7,6 +7,7 @@ package main
 
 import (
 	"io"
+	"os"
 
 	// [START imports]
 	"golang.org/x/oauth2/google"
@@ -37,7 +38,12 @@ func FindLabels(c io.ReadCloser) ([]string, error) {
 
 	// [START request]
 	// Perform the request
-	annotations, err := client.DetectLabels(ctx, c, 10)
+	image, err := vision.NewImageFromReader(c)
+	if err != nil {
+		return nil, err
+	}
+
+	annotations, err := client.DetectLabels(ctx, image, 10)
 	if err != nil {
 		return nil, err
 	}

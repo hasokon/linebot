@@ -145,7 +145,7 @@ func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
 		return
 	}
 
-	messages := make([]*linebot.TextMessage,0)
+	messages := make([]linebot.TextMessage,0)
 	for _, v := range labels {
 		messages = append(messages, linebot.NewTextMessage(v))
 	}
