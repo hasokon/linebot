@@ -29,19 +29,15 @@ func FindLabels(b []byte) ([]string, error) {
 
 	// [START request]
 	// Perform the request
-	reader, err := bytes.NewReader(b)
-	if err != nil {
-		return nil, err
-	}
-
+	reader := bytes.NewReader(b)
 	readcloser := ioutil.NopCloser(reader)
 
-	image, err := NewImageFromReader(readcloser)
+	image, err := vision.NewImageFromReader(readcloser)
 	if err != nil {
 		return nil, err
 	}
 
-	annotations, err := client.DetectLabels(ctx, usableImage, 10)
+	annotations, err := client.DetectLabels(ctx, image, 10)
 	if err != nil {
 		return nil, err
 	}
