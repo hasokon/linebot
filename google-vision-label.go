@@ -6,11 +6,6 @@
 package main
 
 import (
-	"flag"
-	"fmt"
-	"os"
-	"path/filepath"
-
 	// [START imports]
 	"cloud.google.com/go/vision"
 	"golang.org/x/net/context"
@@ -30,8 +25,9 @@ func FindLabels(image []byte) ([]string, error) {
 	// [END init]
 
 	// [START request]
-	// Perform the request.
-	annotations, err := client.DetectLabels(ctx, image, 10)
+	// Perform the request
+	usableImage := &vision.Image{content : image}
+	annotations, err := client.DetectLabels(ctx, usableImage, 10)
 	if err != nil {
 		return nil, err
 	}
