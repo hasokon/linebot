@@ -181,7 +181,7 @@ func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
 		return
 	}
 
-	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(meshiReaction[rand.Intn(len(meshiReaction))])).Do(); err != nil {
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(meshiReaction[rand.Intn(4)])).Do(); err != nil {
 		log.Print(err)
 	}
 }
