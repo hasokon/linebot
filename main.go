@@ -17,10 +17,12 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/hasokon/mahjan"
 	"github.com/line/line-bot-sdk-go/linebot"
@@ -144,10 +146,19 @@ func checkMeshitero(labels []string) bool {
 			return true
 		case strings.Contains(label, "meal"):
 			return true
+		case strings.Contains(label, "drink"):
+			return true
 		}
 	}
 
 	return false
+}
+
+var meshiReaction []string = []string{
+	"飯テロを検知したンゴ！",
+	"お腹が空いてきたンゴね〜",
+	"飯ヤメて...やめてｸﾚﾒﾝｽ...",
+	"飯テロ、絶許",
 }
 
 func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
@@ -164,12 +175,13 @@ func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
 	}
 
 	log.Print(labels)
+	rand.Seed(time.Now().UnixNano())
 
 	if checkMeshitero(labels) == false {
 		return
 	}
 
-	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("飯テロを検知したンゴ！")).Do(); err != nil {
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(meshiReaction[rand.Intn(len(meshiReaction))])).Do(); err != nil {
 		log.Print(err)
 	}
 }
