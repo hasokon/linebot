@@ -174,6 +174,16 @@ func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
 		return
 	}
 
+	log.Print(labels)
+
+	if checkMeshitero(labels) {
+		rand.Seed(time.Now().UnixNano())
+		if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(meshiReaction[rand.Intn(4)])).Do(); err != nil {
+			log.Print(err)
+		}
+		return
+	}
+
 	annotation, err := CheckSafety(content.Content)
 	if err != nil {
 		log.Print(err)
@@ -181,17 +191,6 @@ func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
 	}
 
 	log.Print(annotation)
-
-	log.Print(labels)
-	rand.Seed(time.Now().UnixNano())
-
-	if checkMeshitero(labels) == false {
-		return
-	}
-
-	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(meshiReaction[rand.Intn(4)])).Do(); err != nil {
-		log.Print(err)
-	}
 }
 
 func main() {
