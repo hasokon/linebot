@@ -20,7 +20,6 @@ import (
 	"net/http"
 	"os"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"github.com/hasokon/mahjan"
@@ -139,6 +138,10 @@ func checkMeshitero(labels []string) bool {
 			return true
 		case strings.Contains(label, "food"):
 			return true
+		case strings.Contains(label, "cuisine"):
+			return true
+		case strings.Contains(label, "meal"):
+			return true
 		}
 	}
 
@@ -176,7 +179,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ms := MahjanScore{hu: 40, han: 3}
+	//ms := MahjanScore{hu: 40, han: 3}
 
 	// Setup HTTP Server for receiving requests from LINE platform
 	http.HandleFunc("/callback", func(w http.ResponseWriter, req *http.Request) {
@@ -198,41 +201,42 @@ func main() {
 					replyFromImage(bot, message.ID, event)
 				}
 			}
-
-			if event.Type == linebot.EventTypePostback {
-				postback := event.Postback
-				datas := strings.Split(postback.Data, ",")
-				switch datas[0] {
-				case "parent_or_child":
-					switch datas[1] {
-					case "parent":
-						ms.person = mahjan.Parent
-					case "child":
-						ms.person = mahjan.Child
-					}
-					replyTsumoOrRon(bot, event)
-				case "tsumo_or_ron":
-					switch datas[1] {
-					case "tsumo":
-						ms.tsumo = true
-					case "ron":
-						ms.tsumo = false
-					}
-					replyHu(bot, event)
-				case "hu":
-					hu, _ := strconv.Atoi(datas[1])
-					ms.hu = uint(hu)
-					replyHan(bot, event)
-				case "han":
-					han, _ := strconv.Atoi(datas[1])
-					ms.han = uint(han)
-					yaku := linebot.NewTextMessage(ms.String())
-					score := linebot.NewTextMessage(ms.getMahjanScore())
-					if _, err := bot.ReplyMessage(event.ReplyToken, yaku, score).Do(); err != nil {
-						log.Print(err)
+			/*
+				if event.Type == linebot.EventTypePostback {
+					postback := event.Postback
+					datas := strings.Split(postback.Data, ",")
+					switch datas[0] {
+					case "parent_or_child":
+						switch datas[1] {
+						case "parent":
+							ms.person = mahjan.Parent
+						case "child":
+							ms.person = mahjan.Child
+						}
+						replyTsumoOrRon(bot, event)
+					case "tsumo_or_ron":
+						switch datas[1] {
+						case "tsumo":
+							ms.tsumo = true
+						case "ron":
+							ms.tsumo = false
+						}
+						replyHu(bot, event)
+					case "hu":
+						hu, _ := strconv.Atoi(datas[1])
+						ms.hu = uint(hu)
+						replyHan(bot, event)
+					case "han":
+						han, _ := strconv.Atoi(datas[1])
+						ms.han = uint(han)
+						yaku := linebot.NewTextMessage(ms.String())
+						score := linebot.NewTextMessage(ms.getMahjanScore())
+						if _, err := bot.ReplyMessage(event.ReplyToken, yaku, score).Do(); err != nil {
+							log.Print(err)
+						}
 					}
 				}
-			}
+			*/
 		}
 	})
 	// This is just sample code.
