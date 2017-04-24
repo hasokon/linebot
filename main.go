@@ -15,23 +15,23 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"regexp"
-	"strings"
 	"strconv"
-	"fmt"
+	"strings"
 
-	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/hasokon/mahjan"
+	"github.com/line/line-bot-sdk-go/linebot"
 )
 
 type MahjanScore struct {
 	person mahjan.Person
-	tsumo bool
-	hu uint
-	han uint
+	tsumo  bool
+	hu     uint
+	han    uint
 }
 
 func (this MahjanScore) getMahjanScore() string {
@@ -75,7 +75,7 @@ func reply(bot *linebot.Client, text string, event *linebot.Event) {
 	case text == "麻雀の役を教えて":
 		message = replyMahjanYaku()
 	case text == "麻雀の点数計算して":
-		replyParentOrChild(bot,event)
+		replyParentOrChild(bot, event)
 	default:
 		return
 	}
@@ -90,7 +90,7 @@ func replyParentOrChild(bot *linebot.Client, event *linebot.Event) {
 
 	template := linebot.NewButtonsTemplate("", "", "親 or 子", parentAction, childAction)
 
-	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("親 or 子",template)).Do(); err != nil {
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("親 or 子", template)).Do(); err != nil {
 		log.Print(err)
 	}
 }
@@ -101,7 +101,7 @@ func replyTsumoOrRon(bot *linebot.Client, event *linebot.Event) {
 
 	template := linebot.NewButtonsTemplate("", "", "ツモ or ロン", tsumoAction, ronAction)
 
-	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("ツモ or ロン",template)).Do(); err != nil {
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("ツモ or ロン", template)).Do(); err != nil {
 		log.Print(err)
 	}
 }
@@ -114,7 +114,7 @@ func replyHu(bot *linebot.Client, event *linebot.Event) {
 
 	template := linebot.NewButtonsTemplate("", "", "何符？", action20, action25, action30, action40)
 
-	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("何符？",template)).Do(); err != nil {
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("何符？", template)).Do(); err != nil {
 		log.Print(err)
 	}
 }
@@ -127,7 +127,7 @@ func replyHan(bot *linebot.Client, event *linebot.Event) {
 
 	template := linebot.NewButtonsTemplate("", "", "何翻？", action1, action2, action3, action4)
 
-	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("何翻？",template)).Do(); err != nil {
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("何翻？", template)).Do(); err != nil {
 		log.Print(err)
 	}
 }
@@ -145,12 +145,12 @@ func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
 		return
 	}
 
-	messages := make([]linebot.Message,0)
+	messages := make([]linebot.Message, 0)
 	for _, v := range labels {
 		messages = append(messages, linebot.NewTextMessage(v))
 	}
 
-	if _, err := bot.ReplyMessage(event.ReplyToken, messages...).Do(); err != nil {
+	if _, err := bot.ReplyMessage(event.ReplyToken, messages[:5]...).Do(); err != nil {
 		log.Print(err)
 	}
 }
@@ -164,7 +164,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ms := MahjanScore{hu : 40, han : 3}
+	ms := MahjanScore{hu: 40, han: 3}
 
 	// Setup HTTP Server for receiving requests from LINE platform
 	http.HandleFunc("/callback", func(w http.ResponseWriter, req *http.Request) {
@@ -189,32 +189,36 @@ func main() {
 
 			if event.Type == linebot.EventTypePostback {
 				postback := event.Postback
-				datas := strings.Split(postback.Data,",")
+				datas := strings.Split(postback.Data, ",")
 				switch datas[0] {
-					case "parent_or_child":
-						switch datas[1] {
-							case "parent": ms.person = mahjan.Parent
-							case "child" : ms.person = mahjan.Child
-						}
-						replyTsumoOrRon(bot, event)
-					case "tsumo_or_ron":
-						switch datas[1] {
-							case "tsumo" : ms.tsumo = true
-							case "ron" : ms.tsumo = false
-						}
-						replyHu(bot,event)
-					case "hu":
-						hu,_ := strconv.Atoi(datas[1])
-						ms.hu = uint(hu)
-						replyHan(bot,event)
-					case "han":
-						han,_ := strconv.Atoi(datas[1])
-						ms.han = uint(han)
-						yaku := linebot.NewTextMessage(ms.String())
-						score := linebot.NewTextMessage(ms.getMahjanScore())
-						if _, err := bot.ReplyMessage(event.ReplyToken, yaku, score).Do(); err != nil {
-							log.Print(err)
-						}
+				case "parent_or_child":
+					switch datas[1] {
+					case "parent":
+						ms.person = mahjan.Parent
+					case "child":
+						ms.person = mahjan.Child
+					}
+					replyTsumoOrRon(bot, event)
+				case "tsumo_or_ron":
+					switch datas[1] {
+					case "tsumo":
+						ms.tsumo = true
+					case "ron":
+						ms.tsumo = false
+					}
+					replyHu(bot, event)
+				case "hu":
+					hu, _ := strconv.Atoi(datas[1])
+					ms.hu = uint(hu)
+					replyHan(bot, event)
+				case "han":
+					han, _ := strconv.Atoi(datas[1])
+					ms.han = uint(han)
+					yaku := linebot.NewTextMessage(ms.String())
+					score := linebot.NewTextMessage(ms.getMahjanScore())
+					if _, err := bot.ReplyMessage(event.ReplyToken, yaku, score).Do(); err != nil {
+						log.Print(err)
+					}
 				}
 			}
 		}
