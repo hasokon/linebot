@@ -162,13 +162,13 @@ var meshiReaction []string = []string{
 }
 
 func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
-	content, err := bot.GetMessageContent(id).Do()
+	contentForMeshitero, err := bot.GetMessageContent(id).Do()
 	if err != nil {
 		log.Print(err)
 	}
-	defer content.Content.Close()
+	defer contentForMeshitero.Content.Close()
 
-	labels, err := FindLabels(content.Content)
+	labels, err := FindLabels(contentForMeshitero.Content)
 	if err != nil {
 		log.Print(err)
 		return
@@ -184,7 +184,12 @@ func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
 		return
 	}
 
-	annotation, err := CheckSafety(content.Content)
+	contentForSafeSearch, err := bot.GetMessageContent(id).Do()
+	if err != nil {
+		log.Print(err)
+	}
+	defer contentForSafeSearch.Content.Close()
+	annotation, err := CheckSafety(contentForSafeSearch.Content)
 	if err != nil {
 		log.Print(err)
 		return
