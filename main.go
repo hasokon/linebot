@@ -145,12 +145,12 @@ func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
 		return
 	}
 
-	messages := make([]linebot.Message, 0)
+	messages := make([]byte, 0)
 	for _, v := range labels {
-		messages = append(messages, linebot.NewTextMessage(v))
+		messages = append(messages, []byte(v+"\n")...)
 	}
 
-	if _, err := bot.ReplyMessage(event.ReplyToken, messages[:5]...).Do(); err != nil {
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(string(messages))).Do(); err != nil {
 		log.Print(err)
 	}
 }
