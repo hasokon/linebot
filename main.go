@@ -194,11 +194,28 @@ func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
 		log.Print(err)
 		return
 	}
+	/*
+	   Likelihood_UNKNOWN Likelihood = 0
+	   Likelihood_VERY_UNLIKELY Likelihood = 1
+	   Likelihood_UNLIKELY Likelihood = 2
+	   Likelihood_POSSIBLE Likelihood = 3
+	   Likelihood_LIKELY Likelihood = 4
+	   Likelihood_VERY_LIKELY Likelihood = 5
+	*/
+	log.Println(annotation.Adult, annotation.Medical, annotation.Spoof, annotation.Violence)
 
-	log.Print(annotation.Adult)
-	log.Print(annotation.Medical)
-	log.Print(annotation.Spoof)
-	log.Print(annotation.Violence)
+	switch {
+	case annotation.Adult >= 4 || annotation.Medical >= 4 || annotation.Spoof >= 4 || annotation.Violence >= 4:
+		if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("これはいけない")).Do(); err != nil {
+			log.Print(err)
+		}
+		return
+	case annotation.Adult >= 3:
+		if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("あやしい画像を検知しました")).Do(); err != nil {
+			log.Print(err)
+		}
+		return
+	}
 }
 
 func main() {
