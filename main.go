@@ -163,6 +163,8 @@ func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
 		return
 	}
 
+	log.Print(labels)
+
 	if checkMeshitero(labels) == false {
 		return
 	}
