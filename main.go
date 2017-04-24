@@ -132,6 +132,19 @@ func replyHan(bot *linebot.Client, event *linebot.Event) {
 	}
 }
 
+func checkMeshitero(labels []string) bool {
+	for _, label := range labels {
+		switch {
+		case strings.Contains(label, "dish"):
+			return true
+		case strings.Contains(label, "food"):
+			return true
+		}
+	}
+
+	return false
+}
+
 func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
 	content, err := bot.GetMessageContent(id).Do()
 	if err != nil {
@@ -145,12 +158,11 @@ func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
 		return
 	}
 
-	messages := make([]byte, 0)
-	for _, v := range labels {
-		messages = append(messages, []byte(v+"\n")...)
+	if checkMeshitero(labels) == false {
+		return
 	}
 
-	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(string(messages))).Do(); err != nil {
+	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("飯テロを検知したンゴ！")).Do(); err != nil {
 		log.Print(err)
 	}
 }
