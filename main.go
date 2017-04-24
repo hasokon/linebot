@@ -20,7 +20,6 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
-	"regexp"
 	"strings"
 	"time"
 
@@ -67,12 +66,13 @@ func replyMahjanYaku() string {
 
 func reply(bot *linebot.Client, text string, event *linebot.Event) {
 	message := ""
-	r := regexp.MustCompile(`ンゴ$`)
 	switch {
-	case text == "334":
+	case strings.Contains(text, "334"):
 		message = "なんでや！阪神関係ないやろ！"
-	case r.MatchString(text):
+	case strings.HasSuffix(text, "ンゴ"):
 		message = "はえ〜"
+	case strings.HasSuffix(text, "や！"):
+		message = "(*^◯^*)"
 	case text == "麻雀の役を教えて":
 		message = replyMahjanYaku()
 		/*
@@ -82,6 +82,7 @@ func reply(bot *linebot.Client, text string, event *linebot.Event) {
 	default:
 		return
 	}
+
 	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message)).Do(); err != nil {
 		log.Print(err)
 	}
@@ -205,7 +206,7 @@ func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
 	log.Println(annotation.Adult, annotation.Medical, annotation.Spoof, annotation.Violence)
 
 	switch {
-	case annotation.Adult >= 4 || annotation.Medical >= 4 || annotation.Spoof >= 4 || annotation.Violence >= 4:
+	case annotation.Adult >= 3 || annotation.Medical >= 4 || annotation.Spoof >= 4 || annotation.Violence >= 4:
 		if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("これはいけない")).Do(); err != nil {
 			log.Print(err)
 		}
