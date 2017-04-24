@@ -190,7 +190,10 @@ func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
 		return
 	}
 
-	log.Print(annotation)
+	log.Print(annotation.Adult)
+	log.Print(annotation.Medical)
+	log.Print(annotation.Spoof)
+	log.Print(annotation.Violence)
 }
 
 func main() {
