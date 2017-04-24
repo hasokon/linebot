@@ -57,3 +57,39 @@ func FindLabels(c io.ReadCloser) ([]string, error) {
 	return labels, nil
 	// [END transform]
 }
+
+func CheckSafety(c io.ReadCloser) (*vision.SafeSearchAnnotation, error) {
+	// [START init]
+	json := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
+	ctx := context.Background()
+	jwtConfig, err := google.JWTConfigFromJSON([]byte(json), vision.Scope)
+	if err != nil {
+		return nil, errors.New("google.JWTConfigFromJSON :" + err.Error() + "\n" + json)
+	}
+
+	ts := jwtConfig.TokenSource(ctx)
+
+	// Create the client.
+	client, err := vision.NewClient(ctx, option.WithTokenSource(ts))
+	if err != nil {
+		return nil, err
+	}
+	// [END init]
+
+	// [START request]
+	// Perform the request
+	image, err := vision.NewImageFromReader(c)
+	if err != nil {
+		return nil, err
+	}
+
+	annotation, err := client.DetectSafeSearch(ctx, image)
+	if err != nil {
+		return nil, err
+	}
+	// [END request]
+	// [START transform]
+
+	return annotation, nil
+	// [END transform]
+}

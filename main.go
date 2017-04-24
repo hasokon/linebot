@@ -174,6 +174,14 @@ func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
 		return
 	}
 
+	annotation, err := CheckSafety(content.Content)
+	if err != nil {
+		log.Print(err)
+		return
+	}
+
+	log.Print(annotation)
+
 	log.Print(labels)
 	rand.Seed(time.Now().UnixNano())
 
