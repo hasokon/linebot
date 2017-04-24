@@ -73,8 +73,10 @@ func reply(bot *linebot.Client, text string, event *linebot.Event) {
 		message = "はえ〜"
 	case text == "麻雀の役を教えて":
 		message = replyMahjanYaku()
-	case text == "麻雀の点数計算して":
-		replyParentOrChild(bot, event)
+		/*
+			case text == "麻雀の点数計算して":
+				replyParentOrChild(bot, event)
+		*/
 	default:
 		return
 	}
