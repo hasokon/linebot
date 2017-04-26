@@ -1,6 +1,6 @@
 {
 	"ImportPath": "github.com/hasokon/linebot",
-	"GoVersion": "go1.8",
+	"GoVersion": "go1.7",
 	"GodepVersion": "v79",
 	"Deps": [
 		{
@@ -54,6 +54,10 @@
 		{
 			"ImportPath": "github.com/hasokon/mahjan",
 			"Rev": "f2d86bd9a99d6977a5c61e5d98bc143961078bef"
+		},
+		{
+			"ImportPath": "github.com/hasokon/yahooapi",
+			"Rev": "e3d344c8ec1b437e13a5196bbd09ee33917ddd87"
 		},
 		{
 			"ImportPath": "github.com/line/line-bot-sdk-go/linebot",
