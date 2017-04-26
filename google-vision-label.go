@@ -58,6 +58,7 @@ func FindLabels(c io.ReadCloser) ([]string, error) {
 	// [END transform]
 }
 
+// CheckSafety is check safety of a inputed image
 func CheckSafety(c io.ReadCloser) (*vision.SafeSearchAnnotation, error) {
 	// [START init]
 	json := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
