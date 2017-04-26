@@ -16,6 +16,7 @@ func reply(bot *linebot.Client, text string, event *linebot.Event) {
 		message = replyMahjanYaku()
 	case text == "麻雀の点数計算して" && MAHJAN_SCORE:
 		replyParentOrChild(bot, event)
+		return
 	default:
 		return
 	}
