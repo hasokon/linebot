@@ -28,7 +28,7 @@ func checkMeshitero(labels []string) bool {
 	return false
 }
 
-func replyMeshitero(bot *linebot.Client, id string, event *linebot.Event) {
+func replyMeshitero(bot *linebot.Client, id string, event *linebot.Event) bool {
 	contentForMeshitero, err := bot.GetMessageContent(id).Do()
 	if err != nil {
 		log.Print(err)
@@ -38,7 +38,7 @@ func replyMeshitero(bot *linebot.Client, id string, event *linebot.Event) {
 	labels, err := FindLabels(contentForMeshitero.Content)
 	if err != nil {
 		log.Print(err)
-		return
+		return false
 	}
 
 	log.Print(labels)
@@ -56,24 +56,30 @@ func replyMeshitero(bot *linebot.Client, id string, event *linebot.Event) {
 		case 3:
 			message = "飯テロ、絶許"
 		default:
-			return
+			return false
 		}
 		if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message)).Do(); err != nil {
 			log.Print(err)
+			return false
 		}
+
+		return true
 	}
+
+	return false
 }
 
-func replySafety(bot *linebot.Client, id string, event *linebot.Event) {
+func replySafety(bot *linebot.Client, id string, event *linebot.Event) bool {
 	contentForSafeSearch, err := bot.GetMessageContent(id).Do()
 	if err != nil {
 		log.Print(err)
+		return false
 	}
 	defer contentForSafeSearch.Content.Close()
 	annotation, err := CheckSafety(contentForSafeSearch.Content)
 	if err != nil {
 		log.Print(err)
-		return
+		return false
 	}
 	/*
 	   Likelihood_UNKNOWN Likelihood = 0
@@ -89,19 +95,28 @@ func replySafety(bot *linebot.Client, id string, event *linebot.Event) {
 	case annotation.Adult >= 3 || annotation.Medical >= 4 || annotation.Spoof >= 4 || annotation.Violence >= 4:
 		if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("これはいけない")).Do(); err != nil {
 			log.Print(err)
+			return false
 		}
-		return
+		return true
 	case annotation.Adult >= 2:
 		if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("あやしい画像を検知しました")).Do(); err != nil {
 			log.Print(err)
+			return false
 		}
+		return true
 	}
+
+	return false
 }
 
 func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
+	// ここきもい
 	switch {
 	case CHECK_MESHITERO:
-		replyMeshitero(bot, id, event)
+		if replyMeshitero(bot, id, event) {
+			return
+		}
+		fallthrough
 	case CHECK_SAFETY:
 		replySafety(bot, id, event)
 	}
