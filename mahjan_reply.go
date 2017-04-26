@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"strconv"
 
 	"github.com/hasokon/mahjan"
 	"github.com/line/line-bot-sdk-go/linebot"
@@ -63,5 +64,38 @@ func replyHan(bot *linebot.Client, event *linebot.Event) {
 
 	if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTemplateMessage("何翻？", template)).Do(); err != nil {
 		log.Print(err)
+	}
+}
+
+func replyMahjan(ms MahjanScore, replyType, data string, bot *linebot.Client, event *linebot.Event) {
+	switch replyType {
+	case "parent_or_child":
+		switch data {
+		case "parent":
+			ms.person = mahjan.Parent
+		case "child":
+			ms.person = mahjan.Child
+		}
+		replyTsumoOrRon(bot, event)
+	case "tsumo_or_ron":
+		switch data {
+		case "tsumo":
+			ms.tsumo = true
+		case "ron":
+			ms.tsumo = false
+		}
+		replyHu(bot, event)
+	case "hu":
+		hu, _ := strconv.Atoi(data)
+		ms.hu = uint(hu)
+		replyHan(bot, event)
+	case "han":
+		han, _ := strconv.Atoi(data)
+		ms.han = uint(han)
+		yaku := linebot.NewTextMessage(ms.String())
+		score := linebot.NewTextMessage(ms.getMahjanScore())
+		if _, err := bot.ReplyMessage(event.ReplyToken, yaku, score).Do(); err != nil {
+			log.Print(err)
+		}
 	}
 }
