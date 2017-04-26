@@ -155,13 +155,6 @@ func checkMeshitero(labels []string) bool {
 	return false
 }
 
-var meshiReaction []string = []string{
-	"飯テロを検知したンゴ！",
-	"お腹が空いてきたンゴね〜",
-	"飯ヤメて...やめてｸﾚﾒﾝｽ...",
-	"飯テロ、絶許",
-}
-
 func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
 	contentForMeshitero, err := bot.GetMessageContent(id).Do()
 	if err != nil {
@@ -179,7 +172,20 @@ func replyFromImage(bot *linebot.Client, id string, event *linebot.Event) {
 
 	if checkMeshitero(labels) {
 		rand.Seed(time.Now().UnixNano())
-		if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(meshiReaction[rand.Intn(4)])).Do(); err != nil {
+		message := ""
+		switch rand.Intn(4) {
+		case 0:
+			message = "飯テロを検知したンゴ！"
+		case 1:
+			message = "お腹が空いてきたンゴね〜"
+		case 2:
+			message = "飯ヤメて...やめてｸﾚﾒﾝｽ..."
+		case 3:
+			message = "飯テロ、絶許"
+		default:
+			return
+		}
+		if _, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message)).Do(); err != nil {
 			log.Print(err)
 		}
 		return
