@@ -23,6 +23,8 @@ const (
 	CHECK_MESHITERO = true
 	// CHECK_SAFETY is enable image safety checker
 	CHECK_SAFETY = true
+	// REPLY=PROGNAME is enable to reply from programing name
+	REPLY_PROGNAME = true
 )
 
 func main() {

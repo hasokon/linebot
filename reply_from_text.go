@@ -8,10 +8,13 @@ import (
 
 func reply(bot *linebot.Client, text string, event *linebot.Event) {
 	message := ""
-	result, isMoukoben := CheckMoukoben(text)
+	resultMoukoben, isMoukoben := CheckMoukoben(text)
+	reultProg, isProgName := CheckProgramingLangageName(text)
 	switch {
 	case isMoukoben && REPLY_MOUKOBEN:
-		message = result
+		message = resultMoukoben
+	case isProgName, REPLY_PROGNAME:
+		message = resultProg
 	case text == "麻雀の役を教えて" && MAHJAN_YAKU:
 		message = replyMahjanYaku()
 	case text == "麻雀の点数計算して" && MAHJAN_SCORE:
