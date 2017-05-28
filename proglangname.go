@@ -11,7 +11,7 @@ import (
 const LangageNum = 29
 
 var proglangages = [LangageNum]string{
-	"C言語",
+	"C",
 	"Lisp",
 	"C++",
 	"C#",
@@ -25,12 +25,12 @@ var proglangages = [LangageNum]string{
 	"FORTRAN",
 	"Groovy",
 	"Haskell",
-	"D言語",
+	"D",
 	"Kotlin",
 	"MATLAB",
 	"Nim",
 	"Pascal",
-	"Go言語",
+	"Go",
 	"Perl",
 	"PHP",
 	"R言語",
@@ -65,13 +65,13 @@ func CheckProgramingLangageName(text string) (string, bool) {
 
 	for _, progname := range progNames {
 		switch progname {
-		case "Go言語":
+		case "Go":
 			return "我が名を呼ぶ声がするンゴ", true
 		case "Lisp":
 			return "Lispはきもいンゴ", true
 		case "Dart":
 			return "Dartはワイの親友や！", true
-		case "C言語":
+		case "C":
 			return "Cパイセンには頭が上がらないンゴ", true
 		default:
 			return fmt.Sprintf("%sはくたばるがいいンゴ!!", progname), true
