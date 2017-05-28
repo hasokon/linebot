@@ -9,7 +9,7 @@ import (
 func reply(bot *linebot.Client, text string, event *linebot.Event) {
 	message := ""
 	resultMoukoben, isMoukoben := CheckMoukoben(text)
-	reultProg, isProgName := CheckProgramingLangageName(text)
+	resultProg, isProgName := CheckProgramingLangageName(text)
 	switch {
 	case isMoukoben && REPLY_MOUKOBEN:
 		message = resultMoukoben
